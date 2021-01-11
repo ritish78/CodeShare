@@ -1,6 +1,6 @@
 function send() {
     let object = {
-        "code": document.getElementById("code_snippet").value
+        "body": document.getElementById("code_snippet").value
     };
 
     let json = JSON.stringify(object);

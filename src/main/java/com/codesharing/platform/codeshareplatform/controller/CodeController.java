@@ -40,7 +40,7 @@ public class CodeController {
     }
 
     @PostMapping(path = "/code/new")
-    public String addCodeFromForm(@ModelAttribute("code") String code, Model model) {
+    public String addCodeFromForm() {
         return "welcome";
     }
 
