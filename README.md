@@ -2,7 +2,7 @@
 
 A website to share code made using Spring Boot. It is still in development.
 
-Rest end points avaiable as today:
+Rest end points avaiable as of today:
 1. /code/new
 1. /code/{id}
 1. /code/latest
