@@ -1,0 +1,1 @@
+INSERT INTO code (id, body, date_time) VALUES (0L, 'Testing','2020-01-02 11:15:29');
