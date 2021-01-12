@@ -12,5 +12,3 @@ Rest end points for api:
 1. /api/code/{id}
 1. /api/code/latest
 
-# Known issue:
-1. Post method of end point /code/new is not able to save to the database. However, same with rest api end point can be used to save data.
