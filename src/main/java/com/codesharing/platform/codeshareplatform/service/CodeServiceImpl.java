@@ -21,12 +21,13 @@ public class CodeServiceImpl implements CodeService{
     }
 
     @Override
-    public String save(Code code) {
+    public Code save(Code code) {
         repository.save(code);
         //Returning count, which is equal to the saved code id - 1
         // since, we have a value at id 0.
-        Long noOfRows = repository.count() - 1;
-        return repository.findById(noOfRows).get().getUuid();
+//        Long noOfRows = repository.count() - 1;
+//        return repository.findById(noOfRows).get().getUuid();
+        return repository.save(code);
     }
 
     @Override
@@ -60,6 +61,24 @@ public class CodeServiceImpl implements CodeService{
     public Long getLastCodeId() {
         return repository.getLatestCodeId();
     }
+
+    @Override
+    public Code decreaseCodeView(String uuid, Code codeToUpdate) {
+        Code codeFromDb = repository.findCodeByUuid(uuid);
+        codeFromDb.setUuid(uuid);
+        codeFromDb.setBody(codeToUpdate.getBody());
+        codeFromDb.setTimeInSeconds(codeToUpdate.getTimeInSeconds());
+        codeFromDb.setDateTime(codeToUpdate.getDateTime());
+        codeFromDb.setViewsLeft(codeToUpdate.getViewsLeft() - 1);
+        repository.save(codeFromDb);
+        return codeFromDb;
+    }
+
+//    @Override
+//    public String deleteCodeByUuid(String uuid) {
+//        repository.deleteCodeByUuid(uuid);
+//        return uuid;
+//    }
 
 
 }

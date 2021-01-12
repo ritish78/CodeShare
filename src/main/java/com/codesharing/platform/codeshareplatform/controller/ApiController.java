@@ -30,7 +30,8 @@ public class ApiController {
 
     @PostMapping(path = "/api/code/new", consumes = "application/json")
     public @ResponseBody ResponseEntity<Object> addCode(@RequestBody Code code) {
-        String uuidId = codeService.save(code);
+        Code savedCode = codeService.save(code);
+        String uuidId = savedCode.getUuid();
 
         //Creating an object of UuidJsonHandler class so that we can
         //send response of JSON with uuid in it.
@@ -46,9 +47,22 @@ public class ApiController {
 
         if (codeByUuid.isPresent()) {
             //Decreasing the viewsLeft of code once the GET Request is successful
-//            decreaseCodeView(uuid);
+            //decreaseCodeView(uuid);
 
-            return codeByUuid.get();
+            if (codeByUuid.get().getViewsLeft() < 1) {
+                //Deleting from the database
+                codeService.delete(codeByUuid.get().getId());
+                logger.info("Deleted code for limiting views limit for: " + uuid);
+                throw new CodeNotFoundException("Code of UUID: " + uuid + " is already deleted or does not exists!");
+            }else{
+                //Decreasing the number of views
+//                codeByUuid.get().setViewsLeft(codeByUuid.get().getViewsLeft() - 1);
+//                codeService.save(codeByUuid.get());
+                Code decreasedCodeView = codeService.decreaseCodeView(uuid, codeByUuid.get());
+                return decreasedCodeView;
+            }
+
+//            return codeByUuid.get();
         }else{
             logger.error("Invalid uuid: " + uuid);
             throw new CodeNotFoundException("ID: " + uuid + " does not exists!");
@@ -85,7 +99,7 @@ public class ApiController {
         }
 
         Long startFromId = noOfRows - count;
-        ArrayList<Code> listOfCode = new ArrayList<Code>();
+        ArrayList<Code> listOfCode = new ArrayList<>();
 
         for (Long i = startFromId; i < noOfRows; i++) {
             Optional<Code> codeById = codeService.findCodeById(i);
@@ -103,7 +117,8 @@ public class ApiController {
 
         for (Code code : codeList) {
             UuidJsonHandler uuidJsonHandler = new UuidJsonHandler();
-            String saved = codeService.save(code);
+            Code savedCode = codeService.save(code);
+            String saved = savedCode.getUuid();
             uuidJsonHandler.setUuid(saved);
             uuidOfSavedCode.add(uuidJsonHandler);
         }
@@ -134,33 +149,33 @@ public class ApiController {
 
 
     //Not a rest api
-    public void decreaseCodeView(String uuid) {
-        //No need to make object 'optionalCode' since, we will call
-        //this method only if ifPresent() method returns true.
-        Code codeByUuid = codeService.findCodeByUuid(uuid);
-
-
-        if (codeByUuid.getViewsLeft() <= 1) {
-            codeService.delete(codeByUuid.getId());
-        }else{
-
-            //Then deleting the codeByUuid
-            codeService.delete(codeByUuid.getId());
-
-            Code code = new Code();
-
-            //Setting value to newly created code object
-            code.setId(codeByUuid.getId());
-            code.setBody(codeByUuid.getBody());
-            code.setDateTime(codeByUuid.getDateTime());
-            code.setUuid(uuid);
-            code.setTimeInSeconds(codeByUuid.getTimeInSeconds());
-            code.setViewsLeft(codeByUuid.getViewsLeft() - 1);
-
-
-            //Then adding code object with same value except viewLeft
-            String save = codeService.save(code);
-        }
-    }
+//    public void decreaseCodeView(String uuid) {
+//        //No need to make object 'optionalCode' since, we will call
+//        //this method only if ifPresent() method returns true.
+//        Code codeByUuid = codeService.findCodeByUuid(uuid);
+//
+//
+//        if (codeByUuid.getViewsLeft() <= 1) {
+//            codeService.deleteCodeByUuid(uuid);
+//        }else{
+//
+//            //Then deleting the codeByUuid
+//            codeService.deleteCodeByUuid(uuid);
+//
+//            Code code = new Code();
+//
+//            //Setting value to newly created code object
+//            code.setId(codeByUuid.getId());
+//            code.setBody(codeByUuid.getBody());
+//            code.setDateTime(codeByUuid.getDateTime());
+//            code.setUuid(uuid);
+//            code.setTimeInSeconds(codeByUuid.getTimeInSeconds());
+//            code.setViewsLeft(codeByUuid.getViewsLeft() - 1);
+//
+//
+//            //Then adding code object with same value except viewLeft
+//            String save = codeService.save(code);
+//        }
+//    }
 
 }

@@ -10,7 +10,7 @@ public interface CodeService {
 
     List<Code> findAll();
 
-    String save(Code code);
+    Code save(Code code);
 
     Optional<Code> findCodeById(Long id);
 
@@ -24,5 +24,6 @@ public interface CodeService {
 
     Long getLastCodeId();
 
+    Code decreaseCodeView(String uuid, Code codeToUpdate);
     //String deleteCodeByUuid(String uuid);
 }
