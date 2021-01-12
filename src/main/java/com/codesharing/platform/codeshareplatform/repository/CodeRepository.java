@@ -6,8 +6,9 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface CodeRepository extends CrudRepository<Code, Long> {
 
-    //Code findCodeById(Long id);
+    @Query("SELECT c FROM Code c WHERE c.uuid=:uuid")
+    Code findCodeByUuid(String uuid);
 
-//    @Query(value = "SELECT count(id) FROM code")
-//    Long countCode();
+    @Query("SELECT MAX(c.id) FROM Code c")
+    Long getLatestCodeId();
 }

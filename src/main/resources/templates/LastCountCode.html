@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Code</title>
+    <title>Last Count Code</title>
     <link rel="stylesheet" href="/css/style.css">
 
 
@@ -13,12 +13,23 @@
     <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body>
+    <p>
+        <h1>Last
+            <span th:text="${last}"></span>
+        codes:
+        </h1>
+    </p>
     <div>
-        <span id="load_date" th:text="${snippet_date}"></span>
-        <br>
-        <pre><code id="code_snippet" th:text="${snippet_code}">
-        </code>
-        </pre>
+        <table th:each="codes: ${code_list}" class="hoverTable">
+            <tr>
+                <td th:text="${codes.dateTime}" id="load_date"></td>
+            </tr>
+            <tr>
+                <td><pre><code th:text="${codes.body}" id="code_snippet"></code></pre></td>
+            </tr>
+            <tr><td><hr></td></tr>
+        </table>
     </div>
+
 </body>
 </html>

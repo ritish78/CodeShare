@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -44,22 +46,19 @@ public class CodeController {
         return "welcome";
     }
 
-    @GetMapping(path = "/code/{id}", produces = "text/html")
-    public String getCode(@PathVariable long id, Model model) {
-        if (id < 0) {
-            throw new CodeNotFoundException("Invalid id: " + id);
-        } else {
+    @GetMapping(path = "/code/{uuid}", produces = "text/html")
+    public String getCode(@PathVariable String uuid, Model model) {
 
-            //First getting code
-           Optional<Code> code = codeService.findCodeById(id);
+        //First getting code
+       Optional<Code> code = Optional.ofNullable(codeService.findCodeByUuid(uuid));
 
-           if(code.isPresent()) {
-               model.addAttribute("snippet_date", code.get().getDateTime());
-               model.addAttribute("snippet_code", code.get().getBody());
-           }else{
-               throw new CodeNotFoundException("ID doesn't exists for: " + id);
-           }
-        }
+       if(code.isPresent()) {
+           model.addAttribute("snippet_date", code.get().getDateTime());
+           model.addAttribute("snippet_code", code.get().getBody());
+       }else{
+           throw new CodeNotFoundException("ID doesn't exists for: " + uuid);
+       }
+
         return "codedynamic";
     }
 
@@ -81,6 +80,32 @@ public class CodeController {
             throw new CodeNotFoundException("Deleted too much of code!");
         }
         return "codedynamic";
+    }
+
+    @GetMapping(path = "/code/last/{count}")
+    public String getLastCountCode(@PathVariable int count, Model model) {
+        Long noOfRows = codeService.count();
+
+        if (noOfRows <= count) {
+            List<Code> codeList = codeService.findAll();
+            model.addAttribute("code_list", codeList);
+            model.addAttribute("last", noOfRows);
+        }else{
+            Long startFromId = noOfRows - count;
+            ArrayList<Code> codeList = new ArrayList<>();
+
+            for (Long i = startFromId; i < noOfRows; i++) {
+                Optional<Code> optionalCode = codeService.findCodeById(i);
+
+                if (optionalCode.isPresent()) {
+                    codeList.add(optionalCode.get());
+                }
+            }
+            model.addAttribute("code_list", codeList);
+            model.addAttribute("last", count);
+        }
+        return "lastcountcode";
+
     }
 
 }

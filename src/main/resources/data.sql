@@ -1,1 +1,1 @@
-INSERT INTO code (id, body, date_time) VALUES (0L, 'Testing','2020-01-02 11:15:29');
+INSERT INTO code (id, body, date_time, time_in_seconds, uuid, views_left) VALUES (0L, 'Testing', '2020-01-02 11:15:29', 60L, 'random uuids', 1);

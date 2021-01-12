@@ -8,9 +8,9 @@ body {
 }
 
 .div {
-     width: 80%;
-     margin: auto;
-     overflow: hidden;
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
 }
 
 #load_date {
@@ -27,27 +27,18 @@ body {
     margin: 20px 0;
 }
 
-#code_snippet {
-     background-color: #333;
-        color: #fff;
-        border: 5px red solid;
-        border-width: 3px;
-        border-bottom-width: 10px;
-        border-top-style: dotted;
-
-        padding: 20px;
-
-        margin-top: 20px;
-        margin: 20px 0;
+textarea {
+    width: 400px;
+    height: 450px;
+    align-items: center;
+    padding: 5px;
+    margin-top: 45px;
+    margin-left: 75px;
+    resize: none;
 }
 
-.pre {
-    border-color: #FF7215
-    border-style: solid;
-    border-width: 2px;
-    padding: 10px;
 
-}
+
 
 h1{
     color: red;
@@ -66,4 +57,50 @@ a:hover{
 
 a:active{
     color:#F47023;
+}
+
+.hoverTable{
+    width:50%;
+    border-collapse:collapse;
+    margin: auto;
+}
+.hoverTable td{
+    padding:7px; border:#000000 1px solid;
+}
+.hoverTable tr{
+    background: #444444;
+}
+.hoverTable tr:hover {
+    background-color: #00620F;
+}
+.myButton {
+    box-shadow: inset 0px 39px 0px -24px #e67a73;
+    background-color: #e4685d;
+    border-radius: 4px;
+    border: 1px solid #ffffff;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial;
+    font-size: 15px;
+    padding: 6px 15px;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #b23e35;
+}
+
+.myButton:hover {
+    background-color: #eb675e;
+}
+
+.myButton:active {
+    position: relative;
+    top: 1px;
+}
+
+.container {
+    margin-left: 10px;
+    align-items: center;
+}
+.container .myButton {
+    margin-left: 225px;
 }
