@@ -1,12 +1,17 @@
 package com.codesharing.platform.codeshareplatform.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -42,12 +47,12 @@ public class Code {
        this.dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMATTER));
         /**
          * Generating a random UUID once this constructor is called.
-         * Also, setting max views of 1 time and time left to 60 seconds
-         * if we provide just body.
+         * Also, setting max views of 1 time and time left to 10 hours
+         * (3600 seconds) if we provide just body
          */
        this.uuid = UUID.randomUUID().toString();
-       this.viewsLeft = 1;
-       this.timeInSeconds = 60L;
+        this.viewsLeft = 1;
+        this.timeInSeconds = 3600L;
     }
 
     public Code(String body) {
@@ -58,15 +63,18 @@ public class Code {
          */
         this.uuid = UUID.randomUUID().toString();
         this.viewsLeft = 1;
-        this.timeInSeconds = 60L;
+        this.timeInSeconds = 3600L;
     }
 
-    public Code(String body, String dateTime) {
+    public Code(String body, String dateTime, Integer viewsLeft, Long timeInSeconds) {
         /**
          * Also, doing the same as in no arg constructor
          */
         this.body = body;
         this.dateTime = dateTime;
+        this.viewsLeft = viewsLeft;
+        this.timeInSeconds = timeInSeconds;
+        this.uuid = UUID.randomUUID().toString();
     }
 
     public String getBody() {

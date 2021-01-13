@@ -8,14 +8,24 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/default.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/go.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body>
-    <div>
+    <div class="container">
         <span id="load_date" th:text="${snippet_date}"></span>
         <br>
+        <div class="valuesLeft">
+            <span th:if="${snippet_timeInSeconds != null}">
+                <pre>
+                    <span id="load_views" class="thvalues" th:text="${snippet_viewsLeft}"> more views allowed</span>
+
+                    <br>
+
+                    <span id="load_time" class="thvalues" th:text="${snippet_timeInSeconds}"> seconds is available after the creation of code before the code is deleted.
+                    </span>
+                </pre>
+            </span>
+        </div>
         <pre><code id="code_snippet" th:text="${snippet_code}">
         </code>
         </pre>

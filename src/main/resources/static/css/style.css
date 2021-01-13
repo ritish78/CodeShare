@@ -1,5 +1,5 @@
 body {
-    background-color: #f4f4f4;
+    background-color: #ecbebe;
     color: #555;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
@@ -27,7 +27,7 @@ body {
     margin: 20px 0;
 }
 
-textarea {
+textarea{
     width: 400px;
     height: 450px;
     align-items: center;
@@ -37,7 +37,13 @@ textarea {
     resize: none;
 }
 
-
+input[type=text] {
+    width: 225px;
+    height: 35px;
+    align-items: left;
+    padding: auto;
+    margin-left: 175px;
+}
 
 
 h1{
@@ -86,6 +92,7 @@ a:active{
     padding: 6px 15px;
     text-decoration: none;
     text-shadow: 0px 1px 0px #b23e35;
+    margin-top: 15px;
 }
 
 .myButton:hover {
@@ -103,4 +110,11 @@ a:active{
 }
 .container .myButton {
     margin-left: 225px;
+}
+.container .thvalues {
+    margin-left: 20px;
+    align-items: center;
+    margin-top: 40px;
+    margin-bottom: 40px;
+
 }

@@ -1,6 +1,7 @@
 package com.codesharing.platform.codeshareplatform.controller;
 
 import com.codesharing.platform.codeshareplatform.exception.CodeNotFoundException;
+import com.codesharing.platform.codeshareplatform.exception.TimeExceededException;
 import com.codesharing.platform.codeshareplatform.model.Code;
 import com.codesharing.platform.codeshareplatform.model.UuidJsonHandler;
 import com.codesharing.platform.codeshareplatform.repository.CodeRepository;
@@ -12,6 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,8 +33,12 @@ public class ApiController {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private static final String DATE_TIME_FORMATTER = "yyyy-MM-dd HH:mm:ss";
+
+
     @PostMapping(path = "/api/code/new", consumes = "application/json")
-    public @ResponseBody ResponseEntity<Object> addCode(@RequestBody Code code) {
+    public @ResponseBody
+    ResponseEntity<Object> addCode(@RequestBody Code code) {
         Code savedCode = codeService.save(code);
         String uuidId = savedCode.getUuid();
 
@@ -49,20 +58,43 @@ public class ApiController {
             //Decreasing the viewsLeft of code once the GET Request is successful
             //decreaseCodeView(uuid);
 
+
             if (codeByUuid.get().getViewsLeft() < 1) {
                 //Deleting from the database
                 codeService.delete(codeByUuid.get().getId());
                 logger.info("Deleted code for limiting views limit for: " + uuid);
                 throw new CodeNotFoundException("Code of UUID: " + uuid + " is already deleted or does not exists!");
-            }else{
+            }else {
                 //Decreasing the number of views
 //                codeByUuid.get().setViewsLeft(codeByUuid.get().getViewsLeft() - 1);
 //                codeService.save(codeByUuid.get());
+
                 Code decreasedCodeView = codeService.decreaseCodeView(uuid, codeByUuid.get());
+
+
+                //Checking if the time limit has passed or not
+                if (decreasedCodeView.getTimeInSeconds() != null) {
+                    LocalDateTime localDateTimeNow = LocalDateTime.now();
+
+                    //Then, getting the LocalDateTime of saved code.
+                    LocalDateTime localDateTimeCode = LocalDateTime.parse(decreasedCodeView.getDateTime(),
+                            DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER));
+
+                    /**
+                     * Then, adding the LocalDateTime of code to the time limit of the code.
+                     * If, the time that we get is before current time, then we delete the
+                     * code and return a TimeExceededException.
+                     */
+
+                    if (localDateTimeCode.plusSeconds(decreasedCodeView.getTimeInSeconds()).isBefore(localDateTimeNow)) {
+                        codeService.delete(decreasedCodeView.getId());
+                        logger.info("Deleted code of UUID: " + decreasedCodeView.getUuid() + " for passing time limit.");
+                        throw new TimeExceededException("Time exceeded for: " + decreasedCodeView.getUuid());
+                    }
+                }
                 return decreasedCodeView;
             }
 
-//            return codeByUuid.get();
         }else{
             logger.error("Invalid uuid: " + uuid);
             throw new CodeNotFoundException("ID: " + uuid + " does not exists!");
@@ -147,35 +179,5 @@ public class ApiController {
         }
     }
 
-
-    //Not a rest api
-//    public void decreaseCodeView(String uuid) {
-//        //No need to make object 'optionalCode' since, we will call
-//        //this method only if ifPresent() method returns true.
-//        Code codeByUuid = codeService.findCodeByUuid(uuid);
-//
-//
-//        if (codeByUuid.getViewsLeft() <= 1) {
-//            codeService.deleteCodeByUuid(uuid);
-//        }else{
-//
-//            //Then deleting the codeByUuid
-//            codeService.deleteCodeByUuid(uuid);
-//
-//            Code code = new Code();
-//
-//            //Setting value to newly created code object
-//            code.setId(codeByUuid.getId());
-//            code.setBody(codeByUuid.getBody());
-//            code.setDateTime(codeByUuid.getDateTime());
-//            code.setUuid(uuid);
-//            code.setTimeInSeconds(codeByUuid.getTimeInSeconds());
-//            code.setViewsLeft(codeByUuid.getViewsLeft() - 1);
-//
-//
-//            //Then adding code object with same value except viewLeft
-//            String save = codeService.save(code);
-//        }
-//    }
 
 }

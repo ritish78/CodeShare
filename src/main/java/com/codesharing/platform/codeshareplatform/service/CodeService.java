@@ -4,7 +4,6 @@ import com.codesharing.platform.codeshareplatform.model.Code;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface CodeService {
 
@@ -25,5 +24,6 @@ public interface CodeService {
     Long getLastCodeId();
 
     Code decreaseCodeView(String uuid, Code codeToUpdate);
+
     //String deleteCodeByUuid(String uuid);
 }

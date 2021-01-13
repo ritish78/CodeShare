@@ -16,10 +16,11 @@ public class CodeNotFoundException extends RuntimeException{
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public CodeNotFoundException() {
-        logger.error("Error: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMATTER)));
+        logger.error("Unknown error occurred on: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMATTER)));
     }
 
     public CodeNotFoundException(String message) {
         super(message);
+        logger.info(message);
     }
 }
