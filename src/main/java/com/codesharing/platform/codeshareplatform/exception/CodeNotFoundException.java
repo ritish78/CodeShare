@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "code not found")
+//@ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "code not found")
 public class CodeNotFoundException extends RuntimeException{
 
     private static final String DATE_FORMATTER = "yyyy-MM-dd HH:mm:ss";

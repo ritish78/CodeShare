@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@ResponseStatus(value = HttpStatus.NO_CONTENT, reason = "Time limit exceeded")
+//@ResponseStatus(value = HttpStatus.NO_CONTENT, reason = "Time limit exceeded")
 public class TimeExceededException extends RuntimeException {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
