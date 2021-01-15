@@ -2,7 +2,13 @@
 
 A website to share code made using Spring Boot. It is still in development.
 
-Rest end points available as of today:
+# Features that I want to implement:
+- [ ] Swagger for API docs
+- [x] Deleting all posts of a user if a user is deleted
+- [ ] Hashing of password for security
+- [ ] Implementing Authentication 
+
+# Rest end points available as of today:
 1. GET      /code/new
 1. POST     /code/new
 1. GET      /code/{uuid}
@@ -10,7 +16,7 @@ Rest end points available as of today:
 1. GET      /code/last/{count}
 
 
-Rest end points for api:
+# Rest end points for api:
 
 For Code:
 1. POST     /api/code/new
@@ -125,4 +131,6 @@ Added support for View Limit and Time Limit for code. Once the view limit or tim
 1. GET /code/{uuid}
 1. GET /api/code/{uuid}
 Above end points activate the checking method
+
+
 
