@@ -2,25 +2,27 @@ package com.codesharing.platform.codeshareplatform.controller;
 
 import com.codesharing.platform.codeshareplatform.exception.CodeNotFoundException;
 import com.codesharing.platform.codeshareplatform.exception.TimeExceededException;
+import com.codesharing.platform.codeshareplatform.exception.UserNotFoundException;
 import com.codesharing.platform.codeshareplatform.model.Code;
+import com.codesharing.platform.codeshareplatform.model.Users;
 import com.codesharing.platform.codeshareplatform.model.UuidJsonHandler;
 import com.codesharing.platform.codeshareplatform.repository.CodeRepository;
 import com.codesharing.platform.codeshareplatform.service.CodeService;
+import com.codesharing.platform.codeshareplatform.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.time.LocalDate;
+import java.net.URI;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 public class ApiController {
@@ -29,9 +31,14 @@ public class ApiController {
     CodeService codeService;
 
     @Autowired
+    UserService userService;
+
+    @Autowired
     CodeRepository codeRepository;
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    Logger codeLogger = LoggerFactory.getLogger(this.getClass());
+    Logger userLogger = LoggerFactory.getLogger(this.getClass());
 
     private static final String DATE_TIME_FORMATTER = "yyyy-MM-dd HH:mm:ss";
 
@@ -47,11 +54,42 @@ public class ApiController {
         UuidJsonHandler uuid = new UuidJsonHandler();
         uuid.setUuid(uuidId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(uuid);
+        return ResponseEntity.status(HttpStatus.CREATED).body(uuid);
+    }
+
+
+    @PostMapping(path = "/api/code/{uuid}/new", consumes = "application/json")
+    public @ResponseBody
+    ResponseEntity<Object> addCodeFromUser(@PathVariable String uuid, @RequestBody Code code) {
+        Optional<Users> optionalUser = Optional.ofNullable(userService.findUserByUuid(uuid));
+
+        if (optionalUser.isPresent()) {
+            Users user = optionalUser.get();
+
+            code.setUser(user);
+
+            Code savedCode = codeService.save(code);
+
+            userService.save(user);
+
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{uuid}")
+                    .buildAndExpand(code.getUuid())
+                    .toUri();
+
+            UuidJsonHandler uuidJsonHandler = new UuidJsonHandler();
+            uuidJsonHandler.setUuid(savedCode.getUuid());
+
+            return ResponseEntity.created(location).body(uuidJsonHandler);
+        } else {
+            userLogger.info("User not found of uuid: " + uuid);
+            throw new UserNotFoundException("User doesn't exists or is deleted for uuid: " + uuid);
+        }
+
     }
 
     @GetMapping(path = "/api/code/{uuid}")
-    public Code getCodeByUuid(@PathVariable String uuid){
+    public Code getCodeByUuid(@PathVariable String uuid) {
         Optional<Code> codeByUuid = Optional.ofNullable(codeService.findCodeByUuid(uuid));
 
         if (codeByUuid.isPresent()) {
@@ -62,7 +100,7 @@ public class ApiController {
             if (codeByUuid.get().getViewsLeft() < 1) {
                 //Deleting from the database
                 codeService.delete(codeByUuid.get().getId());
-                logger.info("Deleted code for limiting views limit for: " + uuid);
+                codeLogger.info("Deleted code for limiting views limit for: " + uuid);
                 throw new CodeNotFoundException("Code of UUID: " + uuid + " is already deleted or does not exists!");
             }else {
                 //Decreasing the number of views
@@ -88,7 +126,7 @@ public class ApiController {
 
                     if (localDateTimeCode.plusSeconds(decreasedCodeView.getTimeInSeconds()).isBefore(localDateTimeNow)) {
                         codeService.delete(decreasedCodeView.getId());
-                        logger.info("Deleted code of UUID: " + decreasedCodeView.getUuid() + " for passing time limit.");
+                        codeLogger.info("Deleted code of UUID: " + decreasedCodeView.getUuid() + " for passing time limit.");
                         throw new TimeExceededException("Time exceeded for: " + decreasedCodeView.getUuid());
                     }
                 }
@@ -96,7 +134,7 @@ public class ApiController {
             }
 
         }else{
-            logger.error("Invalid uuid: " + uuid);
+            codeLogger.error("Invalid uuid: " + uuid);
             throw new CodeNotFoundException("ID: " + uuid + " does not exists!");
         }
     }
@@ -115,7 +153,7 @@ public class ApiController {
             /**
              * Returning an empty JSON if we don't have any code in database.
              */
-            logger.info("No code in repository. Check DB!");
+            codeLogger.info("No code in repository. Check DB!");
             return "{}";
         }
     }
@@ -126,7 +164,7 @@ public class ApiController {
 
         if (count >= noOfRows) {
             List<Code> codeList = codeService.findAll();
-            logger.info("Asked for more code body than stored in DB(" + count + "/" + noOfRows + ")");
+            codeLogger.info("Asked for more code body than stored in DB(" + count + "/" + noOfRows + ")");
             return codeList;
         }
 
@@ -172,12 +210,74 @@ public class ApiController {
 
             return uuidJsonHandler;
 
-        }else{
-            logger.info("Deleting code with uuid: " + uuid + " was unsuccessful.");
+        } else {
+            codeLogger.info("Deleting code with uuid: " + uuid + " was unsuccessful.");
             throw new CodeNotFoundException("Code with id: " + uuid + " already deleted or doesn't exists!");
 
         }
     }
 
+
+    @PostMapping(value = "/api/user/new", consumes = "application/json")
+    public ResponseEntity<Object> addUser(@RequestBody Users user) {
+        if (userService.checkEmailAvailability(user.getEmail())) {
+            Users savedUser = userService.save(user);
+
+            UuidJsonHandler uuidJsonHandler = new UuidJsonHandler();
+            uuidJsonHandler.setUuid(savedUser.getUuid());
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(uuidJsonHandler);
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+    }
+
+    @GetMapping(path = "/api/user/{uuid}")
+    public Users getUserByUuid(@PathVariable String uuid) {
+        Optional<Users> userByUuid = Optional.ofNullable(userService.findUserByUuid(uuid));
+
+        if (userByUuid.isPresent()) {
+            return userByUuid.get();
+        } else {
+            userLogger.info("User not found for UUID: " + uuid);
+            throw new UserNotFoundException("User doesn't exists for UUID: " + uuid);
+        }
+    }
+
+    @DeleteMapping(path = "/api/user/{uuid}")
+    public ResponseEntity<Object> deleteUserByUuid(@PathVariable String uuid) {
+        Optional<Users> toBeDeletedUser = Optional.ofNullable(userService.findUserByUuid(uuid));
+
+        if (toBeDeletedUser.isPresent()) {
+            //Deleting all code associated with the user
+            codeService.deleteAllCodeOfAUser(toBeDeletedUser.get().getId());
+
+            //First, need to delete code then only we can delete user.
+            userService.delete(uuid);
+
+            userLogger.info("Deleted user of uuid: " + uuid);
+            codeLogger.info("Deleted all code associated with user of uuid: " + uuid);
+
+            UuidJsonHandler uuidJsonHandler = new UuidJsonHandler();
+            uuidJsonHandler.setUuid(uuid);
+
+            return ResponseEntity.status(HttpStatus.OK).body(uuidJsonHandler);
+        } else {
+            userLogger.info("User already deleted or doesn't exists for UUID: " + uuid);
+            throw new UserNotFoundException("User is already deleted or doesn't exists for UUID: " + uuid);
+        }
+    }
+
+
+    @GetMapping(path = "/api/user/{uuid}/code")
+    public List<Code> retrieveAllCodeByUser(@PathVariable String uuid) {
+        Optional<Users> optionalUser = Optional.ofNullable(userService.findUserByUuid(uuid));
+
+        if (optionalUser.isPresent()) {
+            return optionalUser.get().getCodeList();
+        } else {
+            throw new UserNotFoundException("User with uuid: " + uuid + "does not exists!");
+        }
+    }
 
 }

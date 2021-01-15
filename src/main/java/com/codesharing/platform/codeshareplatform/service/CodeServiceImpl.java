@@ -5,6 +5,7 @@ import com.codesharing.platform.codeshareplatform.repository.CodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -74,11 +75,15 @@ public class CodeServiceImpl implements CodeService{
         return codeFromDb;
     }
 
-//    @Override
-//    public String deleteCodeByUuid(String uuid) {
-//        repository.deleteCodeByUuid(uuid);
-//        return uuid;
-//    }
+    @Override
+    public void deleteAllCodeOfAUser(Long id_user) {
+        Iterable<Code> allCode = repository.findAll();
 
+        for (Code code : allCode) {
+            if (code.getUser().getId().equals(id_user)) {
+                repository.deleteById(code.getId());
+            }
+        }
+    }
 
 }

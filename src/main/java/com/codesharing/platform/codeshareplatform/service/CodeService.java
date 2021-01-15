@@ -25,5 +25,5 @@ public interface CodeService {
 
     Code decreaseCodeView(String uuid, Code codeToUpdate);
 
-    //String deleteCodeByUuid(String uuid);
+    void deleteAllCodeOfAUser(Long id_user);
 }

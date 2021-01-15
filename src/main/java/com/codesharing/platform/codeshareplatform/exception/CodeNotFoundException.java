@@ -21,6 +21,6 @@ public class CodeNotFoundException extends RuntimeException{
 
     public CodeNotFoundException(String message) {
         super(message);
-        logger.info(message);
+        logger.error(message);
     }
 }

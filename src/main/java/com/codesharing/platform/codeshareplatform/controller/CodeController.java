@@ -142,4 +142,9 @@ public class CodeController {
 
     }
 
+    @GetMapping("/signup")
+    public String loadSignupPage() {
+        return "SignUp";
+    }
+
 }

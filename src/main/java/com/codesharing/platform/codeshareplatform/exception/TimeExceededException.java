@@ -13,7 +13,7 @@ public class TimeExceededException extends RuntimeException {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final String DATE_TIME_FORMATTER = "yyyy-MM-ss HH:mm:ss";
+    private static final String DATE_TIME_FORMATTER = "yyyy-MM-dd HH:mm:ss";
 
     public TimeExceededException() {
         logger.info("Time limit exceeded for code on: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER)));

@@ -6,10 +6,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -26,6 +23,8 @@ public class Code {
     @JsonIgnore
     private Long id;
 
+    //To remove the 255 Character limit in database, setting columnDefinition to 'LongText'
+    @Column(name = "body", columnDefinition = "LONGTEXT")
     private String body;
     private String dateTime;
 
@@ -34,6 +33,11 @@ public class Code {
     private String uuid;
     private Integer viewsLeft;
     private Long timeInSeconds;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(name = "iduser", insertable = false, updatable = false)
+    private Users user;
 
 
     private static final String DATE_FORMATTER = "yyyy-MM-dd HH:mm:ss";
@@ -123,6 +127,14 @@ public class Code {
 
     public void setTimeInSeconds(Long timeInSeconds) {
         this.timeInSeconds = timeInSeconds;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
     }
 
     @Override

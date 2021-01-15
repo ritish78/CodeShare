@@ -11,6 +11,4 @@ public interface CodeRepository extends CrudRepository<Code, Long> {
 
     @Query("SELECT MAX(c.id) FROM Code c")
     Long getLatestCodeId();
-
-
 }
