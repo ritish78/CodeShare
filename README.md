@@ -3,8 +3,10 @@
 A website to share code made using Spring Boot. It is still in development.
 
 # Features that I want to implement:
-- [ ] Swagger for API docs
-- [x] Deleting all posts of a user if a user is deleted
+- [X] Swagger for API docs
+- [X] Deleting all posts of a user if a user is deleted
+- [X] Setting time limit so that code will be deleted if time limit is reached
+- [X] Setting view limit so that code will be deleted if view limit is reached
 - [ ] Hashing of password for security
 - [ ] Implementing Authentication 
 
