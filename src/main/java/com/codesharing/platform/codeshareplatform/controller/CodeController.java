@@ -3,20 +3,14 @@ package com.codesharing.platform.codeshareplatform.controller;
 import com.codesharing.platform.codeshareplatform.exception.CodeNotFoundException;
 import com.codesharing.platform.codeshareplatform.exception.TimeExceededException;
 import com.codesharing.platform.codeshareplatform.model.Code;
-import com.codesharing.platform.codeshareplatform.repository.CodeRepository;
 import com.codesharing.platform.codeshareplatform.service.CodeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -37,35 +31,46 @@ public class CodeController {
         return "index";
     }
 
-
-    @GetMapping(path = "/code/new")
-    public String getNewCode(){
+    @GetMapping(path = "/code/{uuid}/new")
+    public String getNewCodeForUser() {
         return "NewCode";
     }
 
-    @PostMapping(path = "/code/new")
-    public String addCodeFromForm() {
+    @PostMapping(path = "/code/{uuid}/new")
+    public String addCodeFromFormForUser() {
         return "index";
     }
+
+    @GetMapping("/signup")
+    public String loadSignupPage() {
+        return "SignUp";
+    }
+
+
+    @GetMapping("/signin")
+    public String showSigninPage() {
+        return "SignIn";
+    }
+
 
     @GetMapping(path = "/code/{uuid}", produces = "text/html")
     public String getCode(@PathVariable String uuid, Model model) {
 
         //First getting code
-       Optional<Code> code = Optional.ofNullable(codeService.findCodeByUuid(uuid));
+        Optional<Code> code = Optional.ofNullable(codeService.findCodeByUuid(uuid));
 
-       if(code.isPresent()) {
+        if (code.isPresent()) {
 
-           if (code.get().getViewsLeft() < 1) {
-               //Deleting from the database
-               codeService.delete(code.get().getId());
-               throw new CodeNotFoundException("Code of UUID: " + uuid + " is already deleted or does not exists!");
-           } else {
-               Code decreasedCodeView = codeService.decreaseCodeView(uuid, code.get());
+            if (code.get().getViewsLeft() < 1) {
+                //Deleting from the database
+                codeService.delete(code.get().getId());
+                throw new CodeNotFoundException("Code of UUID: " + uuid + " is already deleted or does not exists!");
+            } else {
+                Code decreasedCodeView = codeService.decreaseCodeView(uuid, code.get());
 
-               //Checking if the time limit has passed or not
-               if (decreasedCodeView.getTimeInSeconds() != null) {
-                   LocalDateTime localDateTimeNow = LocalDateTime.now();
+                //Checking if the time limit has passed or not
+                if (decreasedCodeView.getTimeInSeconds() != null) {
+                    LocalDateTime localDateTimeNow = LocalDateTime.now();
 
                    //Then, getting the LocalDateTime of saved code.
                    LocalDateTime localDateTimeCode = LocalDateTime.parse(decreasedCodeView.getDateTime(),
@@ -142,9 +147,5 @@ public class CodeController {
 
     }
 
-    @GetMapping("/signup")
-    public String loadSignupPage() {
-        return "SignUp";
-    }
 
 }

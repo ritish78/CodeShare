@@ -26,14 +26,22 @@ function send() {
     }
 
     let xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+          let myObj = JSON.parse(xhr.responseText);
+          let userUuid = myObj.uuid;
+          alert("Your user id: " + userUuid);
+        }
+      }
+
     xhr.open("POST", '/user/new', false);
     xhr.open("POST", '/api/user/new', false)
     xhr.setRequestHeader('Content-type', 'application/json');
     xhr.send(json);
 
-    if (xhr.status == 200) {
-      alert("Success!");
-    }else{
+
+    if (xhr.status != 201) {
       alert("Failed! Please try again with correct values!");
     }
 
