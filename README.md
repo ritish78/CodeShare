@@ -10,6 +10,35 @@ A website to share code made using Spring Boot. It is still in development.
 - [ ] Hashing of password for security
 - [ ] Implementing Authentication 
 
+# How to install:
+In terminal bash: 
+````
+git clone https://github.com/ritish78/CodeShare.git
+````
+
+After the clone is sucessfull, then add this project as 'New Project from Existing Source' (depending upon the IDE) and add 'Maven' . Then, in terminal:
+
+````
+mvn clean install
+````
+
+Then run the 'CodeSharePlatformApplication.java' or in terminal:
+````
+mvn spring-boot:run
+````
+
+Tomcat should start on port 8080.
+
+# API Documentation from Swagger:
+After running the spring boot application, go the url:
+````
+http://locahost:8080/v2/api-docs
+````
+Or, to get the info in UI from Swagger, go the url:
+````
+http://localhost:8080/swagger-ui.html
+````
+
 # Rest end points available as of today:
 1. GET      /code/new
 1. POST     /code/new
