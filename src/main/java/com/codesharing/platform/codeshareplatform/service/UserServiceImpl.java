@@ -2,6 +2,7 @@ package com.codesharing.platform.codeshareplatform.service;
 
 import com.codesharing.platform.codeshareplatform.model.Users;
 import com.codesharing.platform.codeshareplatform.repository.UserRepository;
+import com.codesharing.platform.codeshareplatform.security.PasswordConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +15,20 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository repository;
 
+    @Autowired
+    private PasswordConfig passwordConfig;
+
     @Override
     public Users save(Users user) {
-        return repository.save(user);
+        Users toBeSavedUser = new Users();
+        toBeSavedUser.setUsername(user.getUsername());
+        toBeSavedUser.setEmail(user.getEmail());
+        toBeSavedUser.setPassword(passwordConfig.passwordEncoder().encode(user.getPassword()));
+        toBeSavedUser.setEnabled(true);
+        toBeSavedUser.setAccountNonExpired(true);
+        toBeSavedUser.setAccountNonLocked(true);
+        toBeSavedUser.setCredentialsNonExpired(true);
+        return repository.save(toBeSavedUser);
     }
 
     @Override

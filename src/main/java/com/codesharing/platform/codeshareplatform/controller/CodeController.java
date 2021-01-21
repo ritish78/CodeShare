@@ -43,13 +43,22 @@ public class CodeController {
 
     @GetMapping("/signup")
     public String loadSignupPage() {
-        return "SignUp";
+        return "signup";
     }
 
+    @PostMapping("/signup")
+    public String loadPageAfterSignUp() {
+        return "SignIn";
+    }
 
     @GetMapping("/signin")
     public String showSigninPage() {
         return "SignIn";
+    }
+
+    @PostMapping(path = "/sigin")
+    public String loadPageAfterSignIn() {
+        return "index";
     }
 
 

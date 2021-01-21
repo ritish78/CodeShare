@@ -15,11 +15,11 @@ function send() {
     }
 
     let uuid = document.getElementById("email").value;
-    let endPoint = '/user/' + uuid + "/code";
+    //let endPoint = '/user/' + uuid + "/code";
 
     let xhr = new XMLHttpRequest();
     xhr.open("GET", endPoint, false);
-    xhr.open("GET", '/api' + endPoint, false)
+    xhr.open("GET", '/api/user/new', false)
     xhr.setRequestHeader('Content-type', 'application/json');
     xhr.send(json);
 

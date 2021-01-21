@@ -36,7 +36,7 @@ public class Code {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name = "iduser", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private Users user;
 
 
