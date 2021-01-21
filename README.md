@@ -1,6 +1,7 @@
 # CodeShare
 
 A website to share code made using Spring Boot. It is still in development.
+Open for contributions.
 
 # Features that I want to implement:
 - [X] Swagger for API docs
@@ -9,6 +10,9 @@ A website to share code made using Spring Boot. It is still in development.
 - [X] Setting view limit so that code will be deleted if view limit is reached
 - [ ] Hashing of password for security
 - [ ] Implementing Authentication 
+
+# Known issue:
+1. localhost:8080/signin doesn't sign in the user.
 
 # How to install:
 In terminal bash: 
@@ -32,7 +36,7 @@ Tomcat should start on port 8080.
 # API Documentation from Swagger:
 After running the spring boot application, go the url:
 ````
-http://locahost:8080/v2/api-docs
+http://localhost:8080/v2/api-docs
 ````
 Or, to get the info in UI from Swagger, go the url:
 ````
