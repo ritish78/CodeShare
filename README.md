@@ -1,12 +1,47 @@
 # CodeShare
 
 A website to share code made using Spring Boot. It is still in development.
+Open for contributions.
 
 # Features that I want to implement:
-- [ ] Swagger for API docs
-- [x] Deleting all posts of a user if a user is deleted
+- [X] Swagger for API docs
+- [X] Deleting all posts of a user if a user is deleted
+- [X] Setting time limit so that code will be deleted if time limit is reached
+- [X] Setting view limit so that code will be deleted if view limit is reached
 - [ ] Hashing of password for security
 - [ ] Implementing Authentication 
+
+# Known issue:
+1. localhost:8080/signin doesn't sign in the user.
+
+# How to install:
+In terminal bash: 
+````
+git clone https://github.com/ritish78/CodeShare.git
+````
+
+After the clone is sucessfull, then add this project as 'New Project from Existing Source' (depending upon the IDE) and add 'Maven' . Then, in terminal:
+
+````
+mvn clean install
+````
+
+Then run the 'CodeSharePlatformApplication.java' or in terminal:
+````
+mvn spring-boot:run
+````
+
+Tomcat should start on port 8080.
+
+# API Documentation from Swagger:
+After running the spring boot application, go the url:
+````
+http://localhost:8080/v2/api-docs
+````
+Or, to get the info in UI from Swagger, go the url:
+````
+http://localhost:8080/swagger-ui.html
+````
 
 # Rest end points available as of today:
 1. GET      /code/new
