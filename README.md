@@ -8,8 +8,8 @@ Open for contributions.
 - [X] Deleting all posts of a user if a user is deleted
 - [X] Setting time limit so that code will be deleted if time limit is reached
 - [X] Setting view limit so that code will be deleted if view limit is reached
-- [ ] Hashing of password for security
-- [ ] Implementing Authentication 
+- [X] Hashing of password for security
+- [ ] Implementing Authentication and Authorization
 
 # Known issue:
 1. localhost:8080/signin doesn't sign in the user.
