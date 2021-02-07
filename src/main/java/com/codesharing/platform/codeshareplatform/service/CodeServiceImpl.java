@@ -9,10 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CodeServiceImpl implements CodeService{
+public class CodeServiceImpl implements CodeService {
 
     @Autowired
     private CodeRepository repository;
+
+    @Autowired
+    UserService userService;
 
     @Override
     public List<Code> findAll() {
@@ -21,12 +24,18 @@ public class CodeServiceImpl implements CodeService{
 
     @Override
     public Code save(Code code) {
-        repository.save(code);
+        // repository.save(code);
         //Returning count, which is equal to the saved code id - 1
         // since, we have a value at id 0.
 //        Long noOfRows = repository.count() - 1;
 //        return repository.findById(noOfRows).get().getUuid();
-        return repository.save(code);
+        Code codeToBeSaved = new Code();
+        codeToBeSaved.setBody(code.getBody());
+        codeToBeSaved.setDateTime(code.getDateTime());
+        codeToBeSaved.setTimeInSeconds(code.getTimeInSeconds());
+        codeToBeSaved.setViewsLeft(code.getViewsLeft());
+        //codeToBeSaved.setUser(userService.findUserByUuid(code.getUuid()));
+        return repository.save(codeToBeSaved);
     }
 
     @Override

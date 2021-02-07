@@ -3,11 +3,17 @@ package com.codesharing.platform.codeshareplatform.controller;
 import com.codesharing.platform.codeshareplatform.exception.CodeNotFoundException;
 import com.codesharing.platform.codeshareplatform.exception.TimeExceededException;
 import com.codesharing.platform.codeshareplatform.model.Code;
+import com.codesharing.platform.codeshareplatform.model.Users;
 import com.codesharing.platform.codeshareplatform.service.CodeService;
+import com.codesharing.platform.codeshareplatform.service.UserService;
+import com.codesharing.platform.codeshareplatform.service.UserServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -23,7 +29,13 @@ public class CodeController {
     @Autowired
     private CodeService codeService;
 
+    @Autowired
+    private UserService userService;
+
+
     private static final String DATE_TIME_FORMATTER = "yyyy-MM-dd HH:mm:ss";
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
     @GetMapping(path = "/")
@@ -31,13 +43,22 @@ public class CodeController {
         return "index";
     }
 
-    @GetMapping(path = "/code/{uuid}/new")
+    @GetMapping(path = "/code/new")
     public String getNewCodeForUser() {
         return "NewCode";
     }
 
-    @PostMapping(path = "/code/{uuid}/new")
-    public String addCodeFromFormForUser() {
+    @PostMapping(path = "/code/new")
+    public String addCodeFromFormForUser(Code code, Model model) {
+        Long currentUserId = userService.getCurrentUserId();
+        System.out.println(currentUserId);
+        if (currentUserId == null) {
+            return "redirect:/login";
+        }
+        if (code == null) {
+            return "newcode";
+        }
+        codeService.save(code);
         return "index";
     }
 
@@ -46,19 +67,26 @@ public class CodeController {
         return "signup";
     }
 
+    @GetMapping("/login")
+    public String showLoginPage() {
+        return "SignIn";
+    }
+
     @PostMapping("/signup")
-    public String loadPageAfterSignUp() {
-        return "SignIn";
-    }
+    public String loadPageAfterSignUp(Users users, Model model) {
+        String signUpError = null;
 
-    @GetMapping("/signin")
-    public String showSigninPage() {
-        return "SignIn";
-    }
+        if (!userService.checkEmailAvailability(users.getEmail())) {
+            signUpError = "Sorry, Email is already taken!";
+            logger.warn(String.format("Email %s, is already taken", users.getEmail()));
+        }
 
-    @PostMapping(path = "/sigin")
-    public String loadPageAfterSignIn() {
-        return "index";
+        if (signUpError == null) {
+            userService.save(users);
+            logger.info("Added one user of email: " + users.getEmail());
+        }
+        return "signin";
+
     }
 
 

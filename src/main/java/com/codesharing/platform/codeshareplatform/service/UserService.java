@@ -21,5 +21,5 @@ public interface UserService {
 
     Boolean checkEmailAvailability(String email);
 
-
+    Long getCurrentUserId();
 }

@@ -9,14 +9,17 @@
 <body>
     <div class="container">
         <h1>Type or paste your code here:</h1>
-        <form method="post">
-            <textarea id="code_snippet" width="300" height="500" placeholder="//Write your code..." required></textarea>
+        <form method="post" action="#" th:action="@{/code/new}">
+            <textarea id="code_snippet" name="body" width="300" height="500" placeholder="//Write your code..."
+                      required></textarea>
             <br>
-            <input id="time_restriction" type="text" placeholder="Enter time limit for code (In seconds)">
+            <input id="time_restriction" name="timeInSeconds" type="text"
+                   placeholder="Enter time limit for code (In seconds)">
             <br>
-            <input id="views_restriction" type="text" placeholder="Enter views limit for code" required>
+            <input id="views_restriction" name="viewsLeft" type="text" placeholder="Enter views limit for code"
+                   required>
             <br>
-            <button id="send_snippet" onclick="send()" class="myButton">Submit</button>
+            <button id="send_snippet" class="myButton">Submit</button>
         </form>
     </div>
 </body>

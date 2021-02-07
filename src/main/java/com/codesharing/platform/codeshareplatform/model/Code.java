@@ -1,14 +1,9 @@
 package com.codesharing.platform.codeshareplatform.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.validator.constraints.Length;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -36,9 +31,8 @@ public class Code {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    //@JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = true, updatable = false)
     private Users user;
-
 
     private static final String DATE_FORMATTER = "yyyy-MM-dd HH:mm:ss";
 

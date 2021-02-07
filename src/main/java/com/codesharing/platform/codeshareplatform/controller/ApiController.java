@@ -46,6 +46,10 @@ public class ApiController {
     @PostMapping(path = "/api/code/new", consumes = "application/json")
     public @ResponseBody
     ResponseEntity<Object> addCode(@RequestBody Code code) {
+        Long currentUserId = userService.getCurrentUserId();
+        if (currentUserId == null) {
+            return ResponseEntity.badRequest().build();
+        }
         Code savedCode = codeService.save(code);
         String uuidId = savedCode.getUuid();
 

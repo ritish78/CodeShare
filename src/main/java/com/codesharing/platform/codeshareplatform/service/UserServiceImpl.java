@@ -2,10 +2,14 @@ package com.codesharing.platform.codeshareplatform.service;
 
 import com.codesharing.platform.codeshareplatform.model.Users;
 import com.codesharing.platform.codeshareplatform.repository.UserRepository;
-import com.codesharing.platform.codeshareplatform.security.PasswordConfig;
+import com.codesharing.platform.codeshareplatform.security.HashService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,18 +20,33 @@ public class UserServiceImpl implements UserService {
     UserRepository repository;
 
     @Autowired
-    private PasswordConfig passwordConfig;
+    private HashService hashService;
 
     @Override
     public Users save(Users user) {
         Users toBeSavedUser = new Users();
-        toBeSavedUser.setUsername(user.getUsername());
         toBeSavedUser.setEmail(user.getEmail());
-        toBeSavedUser.setPassword(passwordConfig.passwordEncoder().encode(user.getPassword()));
-        toBeSavedUser.setEnabled(true);
-        toBeSavedUser.setAccountNonExpired(true);
-        toBeSavedUser.setAccountNonLocked(true);
-        toBeSavedUser.setCredentialsNonExpired(true);
+        toBeSavedUser.setUsername(user.getUsername());
+        toBeSavedUser.setUuid(user.getUuid());
+
+        /**
+         * Creating a salt which acts as a hashing value and then
+         * hashing the password and saving it to the database
+         */
+
+        SecureRandom random = new SecureRandom();
+
+        byte[] salt = new byte[16];
+
+        random.nextBytes(salt);
+
+        String encodedSalt = Base64.getEncoder().encodeToString(salt);
+        String hashedPassword = hashService.getHashedValue(user.getPassword(), encodedSalt);
+
+        toBeSavedUser.setSalt(encodedSalt);
+
+        //Saving the hashed password
+        toBeSavedUser.setPassword(hashedPassword);
         return repository.save(toBeSavedUser);
     }
 
@@ -63,6 +82,34 @@ public class UserServiceImpl implements UserService {
         } else {
             return false;
         }
+    }
+
+
+    /**
+     * To get the current User ID.
+     * Principal is the current logged in user.
+     *
+     * @return User ID or null if not logged in
+     */
+    @Override
+    public Long getCurrentUserId() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = null;
+
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+
+        if (username != null) {
+            Users users = this.findUserByEmail(username);
+
+            if (users != null) {
+                return users.getId();
+            }
+        }
+        return null;
     }
 
 }

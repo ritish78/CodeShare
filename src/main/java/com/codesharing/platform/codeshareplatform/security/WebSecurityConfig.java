@@ -15,14 +15,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    PasswordConfig passwordConfig;
+    AuthenticationService authenticationService;
 
-    @Autowired
-    UserDetailsService userDetailsService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordConfig.passwordEncoder());
+//        auth.jdbcAuthentication();
+//        auth.inMemoryAuthentication();
+        auth.authenticationProvider(authenticationService);
     }
 
     @Override
@@ -30,22 +30,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
 //                    .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/css/*", "/js/*", "/signin", "/signup", "/v2/api-docs",
+                .antMatchers("/css/*", "/js/*", "/signin", "/signup", "/v2/api-docs",
                         "/swagger-ui", "/api/code/latest", "/api/user/new", "/h2/**", "/h2/*", "/h2-console/**", "/h2-console/*")
                 .permitAll()
                 .anyRequest()
-                .authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/signin")
-                .permitAll()
-                .defaultSuccessUrl("/index", true)
-                .and()
-                .logout()
-                .permitAll()
-                .and()
-                .httpBasic();
+                .authenticated();
 
+        httpSecurity.formLogin()
+                .loginPage("/login")
+                .permitAll()
+                .failureUrl("/login?error=true");
+
+        httpSecurity.formLogin()
+                .defaultSuccessUrl("/", true);
+
+        httpSecurity.logout()
+                .logoutUrl("/logout")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .logoutSuccessUrl("/login");
 
         //For h2 console
         httpSecurity.csrf().disable();

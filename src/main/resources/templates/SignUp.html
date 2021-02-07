@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Sign Up</title>
     <link rel="stylesheet" href="/css/loginStyle.css">
-    <script type="text/javascript" src="/js/signupSend.js"></script>
+    <!-- <script type="text/javascript" src="/js/signupSend.js"></script> -->
 </head>
 <body>
 <div id="login-box">
     <div class="signup-box">
         <h1>Sign up</h1>
-        <form method="post">
-            <input id="username" type="text" placeholder="Username" required/>
-            <input id="email" type="text" placeholder="E-mail" required/>
-            <input id="password" type="password" placeholder="Password" required/>
+        <form method="post" action="#" th:action="@{/signup}">
+            <input id="username" name="username" type="text" placeholder="Username" required/>
+            <input id="email" name="email" type="text" placeholder="E-mail" required/>
+            <input id="password" name="password" type="password" placeholder="Password" required/>
             <input id="confirmPassword" type="password" placeholder="Retype password" required/>
-
-            <input type="submit" name="signup_submit" value="Sign up" onclick="send()"/>
+            <a th:href="@{/login}">Click here to get to login page!</a>
+            <input type="submit" name="signup_submit" value="Sign up"/>
         </form>
     </div>
 

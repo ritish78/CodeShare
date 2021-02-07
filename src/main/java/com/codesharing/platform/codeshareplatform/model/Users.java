@@ -2,22 +2,20 @@ package com.codesharing.platform.codeshareplatform.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 @Component
 @Entity
-public class Users implements UserDetails {
+public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
-    @Column(name = "user_id", unique = true, nullable = false)
+    //@Column(name = "user_id", unique = true, nullable = false)
     private Long id;
 
     @JsonIgnore
@@ -30,43 +28,16 @@ public class Users implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    //For Security
-    private boolean isEnabled;
-    private boolean isAccountNonExpired;
-    private boolean isAccountNonLocked;
-    private boolean isCredentialsNonExpired;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String salt;
 
-
-    @OneToMany(mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Code> codeList;
-
-    //For Security. Mapping the Role table
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    List<Role> roles;
 
     public Users() {
         this.uuid = UUID.randomUUID().toString();
     }
 
-
-    public Users(String username, String email, String password, Role role) {
-        this.uuid = UUID.randomUUID().toString();
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.roles = new ArrayList();
-        this.roles.add(role);
-    }
-
-    public Users(String uuid, String username, String email, String password) {
-        this.uuid = uuid;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
 
     public Long getId() {
         if (this.id == null) {
@@ -119,61 +90,19 @@ public class Users implements UserDetails {
         this.codeList = codeList;
     }
 
-    @Override
-    public boolean isEnabled() {
-        return isEnabled;
+    public String getSalt() {
+        return salt;
     }
 
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return isAccountNonExpired;
-    }
-
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        isAccountNonExpired = accountNonExpired;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return isAccountNonLocked;
-    }
-
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        isAccountNonLocked = accountNonLocked;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return isCredentialsNonExpired;
-    }
-
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        isCredentialsNonExpired = credentialsNonExpired;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("USER"));
-        return authorities;
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     @Override
     public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
+        return "Users{" +
+                "uuid='" + uuid + '\'' +
+                ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }
