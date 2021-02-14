@@ -4,18 +4,19 @@
     <meta charset="UTF-8">
     <title>Last Count Code</title>
     <link rel="stylesheet" href="/css/style.css">
-
+    <link rel="stylesheet" href="/css/bootstrap_min.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/default.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body>
+<div class="box">
     <p>
-        <h1>Last
-            <span th:text="${last}"></span>
+    <h1>Last
+        <span th:text="${last}"></span>
         codes:
-        </h1>
+    </h1>
     </p>
     <div>
         <table th:each="codes: ${code_list}" class="hoverTable">
@@ -23,11 +24,12 @@
                 <td th:text="${codes.dateTime}" id="load_date"></td>
             </tr>
             <tr>
-                <td><pre><code th:text="${codes.body}" id="code_snippet"></code></pre></td>
+                <td>
+                    <pre><code th:text="${codes.body}" id="code_snippet"></code></pre>
+                </td>
             </tr>
-            <tr><td><hr></td></tr>
         </table>
     </div>
-
+</div>
 </body>
 </html>

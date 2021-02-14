@@ -72,10 +72,10 @@ input[type="submit"] {
   margin-left: 45px;
   width: 120px;
   height: 32px;
-  background: #16a085;
-  border: none;
+  color:#fff;
+  background-color:#158cba;
+  border-color:#158cba;
   border-radius: 2px;
-  color: #FFF;
   font-family: 'Roboto', sans-serif;
   font-weight: 500;
   text-transform: uppercase;

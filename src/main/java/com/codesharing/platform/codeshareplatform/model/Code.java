@@ -31,7 +31,7 @@ public class Code {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = true, updatable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = true, updatable = false)
     private Users user;
 
     private static final String DATE_FORMATTER = "yyyy-MM-dd HH:mm:ss";

@@ -3,24 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>Create</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/bootstrap_min.css">
     <script type="text/javascript" src="/js/funcSend.js"></script>
+    <style>
+        body {
+        background-image: url(https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fsfwallpaper.com%2Fimages%2Fcircuit-board-background-4.jpg&f=1&nofb=1);
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Type or paste your code here:</h1>
-        <form method="post" action="#" th:action="@{/code/new}">
-            <textarea id="code_snippet" name="body" width="300" height="500" placeholder="//Write your code..."
-                      required></textarea>
-            <br>
-            <input id="time_restriction" name="timeInSeconds" type="text"
-                   placeholder="Enter time limit for code (In seconds)">
-            <br>
-            <input id="views_restriction" name="viewsLeft" type="text" placeholder="Enter views limit for code"
-                   required>
-            <br>
-            <button id="send_snippet" class="myButton">Submit</button>
-        </form>
+<h1 class="col-sm-8 mx-auto mt-4" style="color: white; font-weight: bold;">Type or paste your code here:</h1>
+<div class="col-sm-8 mx-auto mt-4 d-flex">
+    <div class="card" style="min-width: 100%">
+        <div class="card-body">
+            <form method="post" action="#" th:action="@{/code/new}">
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <textarea id="code_snippet" class="form-control" name="body" style="width: 400px;
+    height: 450px;
+    align-items: center;
+    padding: 5px;
+    resize: none;" placeholder="//Write your code..."
+                                      required></textarea>
+                        </div>
+                        <br>
+                        <div class="col">
+                            <div class="row">
+                                <input id="time_restriction"  class="form-control" name="timeInSeconds" type="text"
+                                       placeholder="Enter time limit for code (In seconds)">
+                            </div>
+                            <br><br>
+                            <div class="row">
+                                <input id="views_restriction" class="form-control" name="viewsLeft" type="text"
+                                       placeholder="Enter views limit for code"
+                                       required>
+                            </div>
+                            <br><br><br><br>
+                            <div class="row">
+                                    <button id="send_snippet" class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
+</div>
 </body>
 </html>

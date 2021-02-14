@@ -14,17 +14,8 @@ body {
 }
 
 #load_date {
-    background-color: #333;
-    color: #fff;
-    border: 5px red solid;
-    border-width: 3px;
-    border-bottom-width: 10px;
-    border-top-style: dotted;
-
-    padding: 20px;
-
-    margin-top: 20px;
-    margin: 20px 0;
+    color: #D8BFD8;
+    font-size: 20px;
 }
 
 textarea{
@@ -47,7 +38,7 @@ input[type=text] {
 
 
 h1{
-    color: red;
+    color: #FFFFFF;
     font-weight: bold;
 }
 
@@ -57,16 +48,16 @@ a{
 }
 
 a:hover{
-    color:green;
+    color: green;
     font-size: 20px;
 }
 
 a:active{
-    color:#F47023;
+    color:#FF6347;
 }
 
 .hoverTable{
-    width:50%;
+    width:100%;
     border-collapse:collapse;
     margin: auto;
 }
@@ -77,7 +68,7 @@ a:active{
     background: #444444;
 }
 .hoverTable tr:hover {
-    background-color: #00620F;
+    background-color: #4682b4;
 }
 .myButton {
     box-shadow: inset 0px 39px 0px -24px #e67a73;
@@ -107,6 +98,7 @@ a:active{
 .container {
     margin-left: 10px;
     align-items: center;
+    margin-bottom: 75px;
 }
 .container .myButton {
     margin-left: 225px;
@@ -117,4 +109,11 @@ a:active{
     margin-top: 40px;
     margin-bottom: 40px;
 
+}
+
+.box {
+    background-color: black;
+    margin: 0px 300px;
+    padding: 30px 100px;
+    border-radius: 8px;
 }

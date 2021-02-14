@@ -1,19 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
-    <link rel = "stylesheet" href="/css/style.css">
+    <!-- <link rel="stylesheet" href="/css/style.css"> -->
+    <link rel="stylesheet" href="/css/bootstrap_min.css">
+
 </head>
 <body>
-    <div>
-        <h1>Select an option:</h1>
-        <ul>
-            <li>
-                <a href="http://localhost:8080/code/latest">Code</a>
-            </li>
-        </ul>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+        <form action="#" method="POST" th:action="@{/logout}">
+            <button type="submit" class="btn btn-secondary my-2 my-sm-0">Logout</button>
+        </form>
+
+</nav>
+
+<div class="jumbotron col-sm-8 mx-auto mt-4">
+    <h1 class="display-4">Welcome to Code Share</h1>
+    <p class="lead">A website to store your code snippets with feature to set views and time limit</p>
+    <hr class="my-4">
+    <div class="row">
+        <div class="col">
+            <a class="btn btn-primary btn-lg d-flex justify-content-center" href="http://localhost:8080/code/new">Create
+                new snippet</a>
+        </div>
+        <div class="col">
+            <a class="btn btn-primary btn-lg d-flex justify-content-center" href="http://localhost:8080/code/last/10">View
+                last 10 snippet</a>
+        </div>
     </div>
+</div>
 
 </body>
 </html>
