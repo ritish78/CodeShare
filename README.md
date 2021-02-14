@@ -1,6 +1,6 @@
 # CodeShare
 
-A website to share code made using Spring Boot. It is still in development.
+A website to share code made using Spring Boot. Nearly at the end of development.
 Open for contributions.
 
 # Features that I want to implement:
@@ -9,7 +9,6 @@ Open for contributions.
 - [X] Setting time limit so that code will be deleted if time limit is reached
 - [X] Setting view limit so that code will be deleted if view limit is reached
 - [X] Hashing of password for security
-- [ ] Implementing Authentication and Authorization
 
 # How to install:
 In terminal bash: 
@@ -164,5 +163,27 @@ Added support for View Limit and Time Limit for code. Once the view limit or tim
 1. GET /api/code/{uuid}
 Above end points activate the checking method
 
+# Usage front-end:
+* Log In page: <br>
+![Log In screen](https://user-images.githubusercontent.com/36816476/107867970-0b801e80-6ed4-11eb-8b56-6b62cfc72c21.PNG)
+
+
+* Sign Up page: <br>
+![Sign Up Screen](https://user-images.githubusercontent.com/36816476/107867986-310d2800-6ed4-11eb-89bc-9147dbc7d7a1.PNG)
+
+* Filling details in sign up page: <br>
+![Filling details in sign up screen](https://user-images.githubusercontent.com/36816476/107868003-5732c800-6ed4-11eb-931e-c0cc23b7e257.PNG)
+
+* Home page after signing in: <br>
+![Home page after signing in](https://user-images.githubusercontent.com/36816476/107868012-703b7900-6ed4-11eb-94ca-ce574821a447.PNG)
+
+* Providing code and setting time and view limit: <br>
+![Providing code and setting time and view limit](https://user-images.githubusercontent.com/36816476/107868022-952fec00-6ed4-11eb-9dc8-e7e87567c4e9.PNG)
+
+* The code which we had provided appears in 'last' section
+![The code which we had provided](https://user-images.githubusercontent.com/36816476/107868036-bb558c00-6ed4-11eb-9783-e2992ef85a66.PNG)
+
+* Latest code by going to the 'latest' endpoint
+![Latest code by going to the 'latest' endpoint](https://user-images.githubusercontent.com/36816476/107868039-c8727b00-6ed4-11eb-88be-74dcea842a5b.PNG)
 
 
