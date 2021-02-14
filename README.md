@@ -11,9 +11,6 @@ Open for contributions.
 - [X] Hashing of password for security
 - [ ] Implementing Authentication and Authorization
 
-# Known issue:
-1. localhost:8080/signin doesn't sign in the user.
-
 # How to install:
 In terminal bash: 
 ````
